@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\api\InMemoryCacheApi.csproj" />
+      <ProjectReference Include="..\InMemoryCacheApi\InMemoryCacheApi.csproj" />
     </ItemGroup>
 
 </Project>
