@@ -20,8 +20,8 @@ namespace InMemoryCacheTests
         private readonly User _user2 = new User
         {
             Id = 2,
-            FirstName = "Ihor",
-            SecondName = "Dyrman",
+            FirstName = "Not Ihor",
+            SecondName = "Not Dyrman",
             Age = 35
         };
 

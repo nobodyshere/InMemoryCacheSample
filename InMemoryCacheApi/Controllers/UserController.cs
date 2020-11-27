@@ -28,7 +28,7 @@ namespace InMemoryCacheApi.Controllers
 
 
         [HttpGet("{id}")]
-        public IActionResult User(int id)
+        public IActionResult GetUser(int id)
         {
             var user = _cacheService.GetCachedUser(id);
 
@@ -43,7 +43,7 @@ namespace InMemoryCacheApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult User(User user)
+        public IActionResult AddUser(User user)
         {
             if (user.FirstName != null
                 || user.SecondName != null)
@@ -53,7 +53,7 @@ namespace InMemoryCacheApi.Controllers
 
                 _userService.InsertUser(user);
 
-                if (_cacheService.GetCachedUser(user.Id) != null) 
+                if (_cacheService.GetCachedUser(user.Id) != null)
                     _cacheService.ClearCache(user.Id);
 
                 _cacheService.SetCache(user);
@@ -63,7 +63,7 @@ namespace InMemoryCacheApi.Controllers
             return BadRequest("Wrong data format");
         }
 
-
+        [HttpPut]
         public IActionResult UpdateUser(User user)
         {
             var existUser = _cacheService.GetCachedUser(user.Id)
