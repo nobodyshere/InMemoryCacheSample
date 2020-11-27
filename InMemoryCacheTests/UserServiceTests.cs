@@ -6,25 +6,33 @@ namespace InMemoryCacheTests
 {
     public class UserServiceTests
     {
+        private readonly User _user1 = new User
+        {
+            Id = 6,
+            Age = 35,
+            FirstName = "Ihor",
+            SecondName = "Dyrman"
+        };
+
+        private readonly User _user2 = new User
+        {
+            Id = 6,
+            Age = 33,
+            FirstName = "Not Ihor",
+            SecondName = "Not Dyrman"
+        };
+
         [Fact]
         public void UserInsertSuccess()
         {
             // Arrange
-            var user = new User
-            {
-                Id = 6,
-                Age = 35,
-                FirstName = "Ihor",
-                SecondName = "Dyrman"
-            };
-
             var userService = new UserService();
 
             // Act
-            userService.InsertUser(user);
+            userService.InsertUser(_user1);
 
             // Assert
-            var existUser = userService.GetUserById(user.Id);
+            var existUser = userService.GetUserById(_user1.Id);
             Assert.NotNull(existUser);
         }
 
@@ -32,47 +40,23 @@ namespace InMemoryCacheTests
         public void UserInsertFailed()
         {
             // Arrange
-            var user1 = new User
-            {
-                Id = 6,
-                Age = 35,
-                FirstName = "Ihor",
-                SecondName = "Dyrman"
-            };
-
-            var user2 = new User
-            {
-                Id = 6,
-                Age = 33,
-                FirstName = "Ihor",
-                SecondName = "Dyrman"
-            };
-
             var userService = new UserService();
 
             // Act
-            userService.InsertUser(user1);
-            userService.InsertUser(user2);
+            userService.InsertUser(_user1);
+            userService.InsertUser(_user2);
 
             // Arrange
             var existUser = userService.GetUserById(6);
             Assert.NotNull(existUser);
-            Assert.NotEqual(existUser.Age, user2.Age);
-            Assert.Equal(existUser.FirstName, user2.FirstName);
+            Assert.NotEqual(existUser.Age, _user2.Age);
+            Assert.NotEqual(existUser.FirstName, _user2.FirstName);
         }
 
         [Fact]
         public void UserRemoveSuccess()
         {
             // Arrange
-            var user = new User
-            {
-                Id = 6,
-                Age = 35,
-                FirstName = "Ihor",
-                SecondName = "Dyrman"
-            };
-
             var userService = new UserService();
 
             // Act
@@ -86,34 +70,17 @@ namespace InMemoryCacheTests
         [Fact]
         public void UserUpdateSuccess()
         {
-            // Arrange
-            var user1 = new User
-            {
-                Id = 6,
-                Age = 35,
-                FirstName = "Ihor",
-                SecondName = "Dyrman"
-            };
-
-            var user2 = new User
-            {
-                Id = 6,
-                Age = 33,
-                FirstName = "Not Ihor",
-                SecondName = "Not Dyrman"
-            };
-
             var userService = new UserService();
-            userService.InsertUser(user1);
+            userService.InsertUser(_user1);
 
             // Act
-            userService.UpdateUser(user2);
+            userService.UpdateUser(_user2);
             var actualUser = userService.GetUserById(6);
 
             // Assert
-            Assert.Equal(user2.Age, actualUser.Age);
-            Assert.Equal(user2.FirstName, actualUser.FirstName);
-            Assert.Equal(user2.SecondName, actualUser.SecondName);
+            Assert.Equal(_user2.Age, actualUser.Age);
+            Assert.Equal(_user2.FirstName, actualUser.FirstName);
+            Assert.Equal(_user2.SecondName, actualUser.SecondName);
         }
 
         [Fact]

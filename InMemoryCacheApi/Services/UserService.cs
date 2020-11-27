@@ -49,8 +49,6 @@ namespace InMemoryCacheApi.Services
                     Age = 73
                 }
             });
-
-            _users = _users.OrderBy(x => new Guid()).ToList();
         }
 
         public IEnumerable<User> GetUsers()
