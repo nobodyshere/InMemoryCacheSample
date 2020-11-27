@@ -115,5 +115,18 @@ namespace InMemoryCacheTests
             Assert.Equal(user2.FirstName, actualUser.FirstName);
             Assert.Equal(user2.SecondName, actualUser.SecondName);
         }
+
+        [Fact]
+        public void GetAllUsersNotNull()
+        {
+            // Arrange
+            var userService = new UserService();
+
+            // Act
+            var users = userService.GetUsers();
+
+            // Assert
+            Assert.NotEmpty(users);
+        }
     }
 }
