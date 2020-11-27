@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using InMemoryCacheSample.Models;
+using InMemoryCacheApi.Models;
 
-namespace InMemoryCacheSample.Services
+namespace InMemoryCacheApi.Services
 {
     public class UserService : IUserService
     {

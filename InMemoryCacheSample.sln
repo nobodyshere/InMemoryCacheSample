@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InMemoryCacheSample", "api\InMemoryCacheSample.csproj", "{2ECA1693-11FE-4B8D-B85F-0D7509C9BDAD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InMemoryCacheApi", "api\InMemoryCacheApi.csproj", "{2ECA1693-11FE-4B8D-B85F-0D7509C9BDAD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InMemoryCacheTests", "InMemoryCacheTests\InMemoryCacheTests.csproj", "{F012FF30-1A86-4010-B67C-4986D50F0ED8}"
 EndProject

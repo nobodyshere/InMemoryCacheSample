@@ -1,8 +1,8 @@
 ﻿using System;
-using InMemoryCacheSample.Models;
+using InMemoryCacheApi.Models;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace InMemoryCacheSample.Services
+namespace InMemoryCacheApi.Services
 {
     public interface IMemoryCacheService
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using InMemoryCacheSample.Models;
+using InMemoryCacheApi.Models;
 
-namespace InMemoryCacheSample.Services
+namespace InMemoryCacheApi.Services
 {
     public interface IUserService
     {

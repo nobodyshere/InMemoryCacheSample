@@ -1,4 +1,4 @@
-﻿namespace InMemoryCacheSample.Models
+﻿namespace InMemoryCacheApi.Models
 {
     public class User
     {

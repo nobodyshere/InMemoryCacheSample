@@ -1,9 +1,9 @@
-﻿using InMemoryCacheSample.Models;
-using InMemoryCacheSample.Services;
+﻿using InMemoryCacheApi.Models;
+using InMemoryCacheApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace InMemoryCacheSample.Controllers
+namespace InMemoryCacheApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]

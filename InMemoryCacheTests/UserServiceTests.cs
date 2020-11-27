@@ -1,5 +1,5 @@
-﻿using InMemoryCacheSample.Models;
-using InMemoryCacheSample.Services;
+﻿using InMemoryCacheApi.Models;
+using InMemoryCacheApi.Services;
 using Xunit;
 
 namespace InMemoryCacheTests
