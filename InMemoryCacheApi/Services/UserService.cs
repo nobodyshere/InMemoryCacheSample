@@ -51,17 +51,29 @@ namespace InMemoryCacheApi.Services
             });
         }
 
+        /// <summary>
+        /// Get list of all users
+        /// </summary>
         public IEnumerable<User> GetUsers()
         {
             return _users;
         }
 
+        /// <summary>
+        /// Get user by id
+        /// </summary>
+        /// <param name="id">User id</param>
+        /// <returns>User</returns>
         public User GetUserById(int id)
         {
             var user = _users.FirstOrDefault(x => x.Id == id);
             return user;
         }
 
+        /// <summary>
+        /// Add user to the list if it does not yet exist there
+        /// </summary>
+        /// <param name="user">User to add</param>
         public void InsertUser(User user)
         {
             var existingUser = _users.FirstOrDefault(x => x.Id == user.Id);
@@ -69,6 +81,10 @@ namespace InMemoryCacheApi.Services
             if (existingUser == null) _users.Add(user);
         }
 
+        /// <summary>
+        /// Remove user from the list
+        /// </summary>
+        /// <param name="id">Id of the user we need to remove</param>
         public void DeleteUser(int id)
         {
             var user = _users.FirstOrDefault(x => x.Id == id);
@@ -76,6 +92,10 @@ namespace InMemoryCacheApi.Services
             if (user != null) _users.Remove(user);
         }
 
+        /// <summary>
+        /// Update exist user in the list
+        /// </summary>
+        /// <param name="user">User to update</param>
         public void UpdateUser(User user)
         {
             var existUser = _users.FirstOrDefault(x => x.Id == user.Id);

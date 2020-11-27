@@ -16,12 +16,21 @@ namespace InMemoryCacheApi.Services
             _memoryCache = memoryCache;
         }
 
+        /// <summary>
+        /// Get user from cache if exist
+        /// </summary>
+        /// <param name="key">User Id</param>
+        /// <returns>User or null if user not found</returns>
         public User GetCachedUser(int key)
         {
-            _memoryCache.TryGetValue<User>(key, out User value);
+            _memoryCache.TryGetValue<User>(key, out var value);
             return value;
         }
 
+        /// <summary>
+        /// Save user to the memory cache
+        /// </summary>
+        /// <param name="user">User to save</param>
         public void SetCache(User user)
         {
             var cacheExpiryOptions = new MemoryCacheEntryOptions
@@ -35,6 +44,10 @@ namespace InMemoryCacheApi.Services
             _memoryCache.Set(user.Id, user, cacheExpiryOptions);
         }
 
+        /// <summary>
+        /// Remove user from cache
+        /// </summary>
+        /// <param name="id">User id</param>
         public void ClearCache(int id)
         {
             _memoryCache.Remove(id);
