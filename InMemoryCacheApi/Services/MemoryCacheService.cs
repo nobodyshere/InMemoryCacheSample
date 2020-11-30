@@ -10,10 +10,12 @@ namespace InMemoryCacheApi.Services
         private const int CacheSize = 1024;
         private const int AbsoluteExpirationsMinutes = 10;
         private const int SlidingExpirationsMinutes = 5;
+        private static object _sync;
 
         public MemoryCacheService(IMemoryCache memoryCache)
         {
             _memoryCache = memoryCache;
+            _sync = new object();
         }
 
         /// <summary>
@@ -23,8 +25,11 @@ namespace InMemoryCacheApi.Services
         /// <returns>User or null if user not found</returns>
         public User GetCachedUser(int key)
         {
-            _memoryCache.TryGetValue<User>(key, out var value);
-            return value;
+            lock (_sync)
+            {
+                _memoryCache.TryGetValue<User>(key, out var value);
+                return value;
+            }
         }
 
         /// <summary>
@@ -33,15 +38,18 @@ namespace InMemoryCacheApi.Services
         /// <param name="user">User to save</param>
         public void SetCache(User user)
         {
-            var cacheExpiryOptions = new MemoryCacheEntryOptions
+            lock (_sync)
             {
-                AbsoluteExpiration = DateTime.Now.AddMinutes(AbsoluteExpirationsMinutes),
-                Priority = CacheItemPriority.Normal,
-                SlidingExpiration = TimeSpan.FromMinutes(SlidingExpirationsMinutes),
-                Size = CacheSize,
-            };
+                var cacheExpiryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.Now.AddMinutes(AbsoluteExpirationsMinutes),
+                    Priority = CacheItemPriority.Normal,
+                    SlidingExpiration = TimeSpan.FromMinutes(SlidingExpirationsMinutes),
+                    Size = CacheSize,
+                };
 
-            _memoryCache.Set(user.Id, user, cacheExpiryOptions);
+                _memoryCache.Set(user.Id, user, cacheExpiryOptions);
+            }
         }
 
         /// <summary>
@@ -50,7 +58,10 @@ namespace InMemoryCacheApi.Services
         /// <param name="id">User id</param>
         public void ClearCache(int id)
         {
-            _memoryCache.Remove(id);
+            lock (_sync)
+            {
+                _memoryCache.Remove(id);
+            }
         }
     }
 }
