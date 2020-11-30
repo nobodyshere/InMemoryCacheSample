@@ -29,7 +29,7 @@ namespace InMemoryCacheApi.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(int id)
+        public async Task<IActionResult> GetUserAsync(int id)
         {
             var user = _cacheService.GetCachedUser(id);
 
@@ -45,7 +45,7 @@ namespace InMemoryCacheApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddUser(User user)
+        public async Task<IActionResult> AddUserAsync(User user)
         {
             if (user.FirstName == null && user.SecondName == null)
                 return BadRequest("Wrong data format");
@@ -64,7 +64,7 @@ namespace InMemoryCacheApi.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUser(User user)
+        public async Task<IActionResult> UpdateUserAsync(User user)
         {
             var existUser = _cacheService.GetCachedUser(user.Id)
                 ?? await _userService.GetUserByIdAsync(user.Id);
@@ -81,7 +81,7 @@ namespace InMemoryCacheApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> RemoveUser(int id)
+        public async Task<IActionResult> RemoveUserAsync(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);
 
