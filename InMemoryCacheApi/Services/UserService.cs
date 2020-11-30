@@ -1,62 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using InMemoryCacheApi.Context;
 using InMemoryCacheApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace InMemoryCacheApi.Services
 {
     public class UserService : IUserService
     {
-        private readonly List<User> _users = new List<User>();
+        private readonly InMemoryContext _context;
 
-        public UserService()
+        public UserService(InMemoryContext context)
         {
-            _users.AddRange(new List<User>
-            {
-                new User
-                {
-                    Id = 1,
-                    FirstName = "Innis",
-                    SecondName = "Mawford",
-                    Age = 95
-                },
-                new User
-                {
-                    Id = 2,
-                    FirstName = "Gabrila",
-                    SecondName = "Drewell",
-                    Age = 35
-                },
-                new User
-                {
-                    Id = 3,
-                    FirstName = "Gonzalo",
-                    SecondName = "Rentilll",
-                    Age = 75
-                },
-                new User
-                {
-                    Id = 4,
-                    FirstName = "Daven",
-                    SecondName = "Streat",
-                    Age = 56
-                },
-                new User
-                {
-                    Id = 5,
-                    FirstName = "Rianon",
-                    SecondName = "Gumey",
-                    Age = 73
-                }
-            });
+            _context = context;
         }
 
         /// <summary>
         /// Get list of all users
         /// </summary>
-        public IEnumerable<User> GetUsers()
+        public async Task<IEnumerable<User>> GetUsersAsync()
         {
-            return _users;
+            return await _context.Users.ToListAsync();
         }
 
         /// <summary>
@@ -64,47 +30,56 @@ namespace InMemoryCacheApi.Services
         /// </summary>
         /// <param name="id">User id</param>
         /// <returns>User</returns>
-        public User GetUserById(int id)
+        public async Task<User> GetUserByIdAsync(int id)
         {
-            var user = _users.FirstOrDefault(x => x.Id == id);
-            return user;
+            return await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         /// <summary>
         /// Add user to the list if it does not yet exist there
         /// </summary>
         /// <param name="user">User to add</param>
-        public void InsertUser(User user)
+        public async Task InsertUserAsync(User user)
         {
-            var existingUser = _users.FirstOrDefault(x => x.Id == user.Id);
+            var existingUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
 
-            if (existingUser == null) _users.Add(user);
+            if (existingUser == null)
+            {
+                await _context.Users.AddAsync(user);
+                await _context.SaveChangesAsync();
+            }
         }
 
         /// <summary>
         /// Remove user from the list
         /// </summary>
         /// <param name="id">Id of the user we need to remove</param>
-        public void DeleteUser(int id)
+        public async Task DeleteUserAsync(int id)
         {
-            var user = _users.FirstOrDefault(x => x.Id == id);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (user != null) _users.Remove(user);
+            if (user != null)
+            {
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+            }
         }
 
         /// <summary>
         /// Update exist user in the list
         /// </summary>
         /// <param name="user">User to update</param>
-        public void UpdateUser(User user)
+        public async Task UpdateUserAsync(User user)
         {
-            var existUser = _users.FirstOrDefault(x => x.Id == user.Id);
+            var existUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
 
             if (existUser != null)
             {
                 existUser.FirstName = user.FirstName;
                 existUser.SecondName = user.SecondName;
                 existUser.Age = user.Age;
+
+                await _context.SaveChangesAsync();
             }
         }
     }

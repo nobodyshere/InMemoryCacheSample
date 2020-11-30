@@ -1,4 +1,5 @@
-﻿using InMemoryCacheApi.Models;
+﻿using System.Threading.Tasks;
+using InMemoryCacheApi.Models;
 using InMemoryCacheApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -21,72 +22,74 @@ namespace InMemoryCacheApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult Users()
+        public async Task<IActionResult> Users()
         {
-            return Ok(_userService.GetUsers());
+            return Ok(await _userService.GetUsersAsync());
         }
 
 
         [HttpGet("{id}")]
-        public IActionResult GetUser(int id)
+        public async Task<IActionResult> GetUser(int id)
         {
             var user = _cacheService.GetCachedUser(id);
 
             if (user == null)
             {
-                user = _userService.GetUserById(id);
+                user = await _userService.GetUserByIdAsync(id);
                 _cacheService.SetCache(user);
             }
 
             if (user != null) return Ok(user);
+
             return BadRequest("User not found");
         }
 
         [HttpPost]
-        public IActionResult AddUser(User user)
+        public async Task<IActionResult> AddUser(User user)
         {
-            if (user.FirstName != null
-                || user.SecondName != null)
-            {
-                if (_userService.GetUserById(user.Id) != null)
-                    return BadRequest("User already exist");
+            if (user.FirstName == null && user.SecondName == null)
+                return BadRequest("Wrong data format");
 
-                _userService.InsertUser(user);
+            if (await _userService.GetUserByIdAsync(user.Id) != null)
+                return BadRequest("User already exist");
 
-                if (_cacheService.GetCachedUser(user.Id) != null)
-                    _cacheService.ClearCache(user.Id);
+            await _userService.InsertUserAsync(user);
 
-                _cacheService.SetCache(user);
-                return Ok();
-            }
+            if (_cacheService.GetCachedUser(user.Id) != null)
+                _cacheService.ClearCache(user.Id);
 
-            return BadRequest("Wrong data format");
+            _cacheService.SetCache(user);
+            return Ok();
+
         }
 
         [HttpPut]
-        public IActionResult UpdateUser(User user)
+        public async Task<IActionResult> UpdateUser(User user)
         {
             var existUser = _cacheService.GetCachedUser(user.Id)
-                ?? _userService.GetUserById(user.Id);
+                ?? await _userService.GetUserByIdAsync(user.Id);
 
             if (existUser == null)
                 return NotFound("User not found");
 
-            _userService.UpdateUser(user);
+            await _userService.UpdateUserAsync(user);
+
+            _cacheService.ClearCache(user.Id);
+            _cacheService.SetCache(user);
 
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult RemoveUser(int id)
+        public async Task<IActionResult> RemoveUser(int id)
         {
-            var user = _userService.GetUserById(id);
+            var user = await _userService.GetUserByIdAsync(id);
 
             if (user == null)
                 return BadRequest("User not found");
 
             _cacheService.ClearCache(id);
-            _userService.DeleteUser(id);
+            await _userService.DeleteUserAsync(id);
 
             return Ok();
         }

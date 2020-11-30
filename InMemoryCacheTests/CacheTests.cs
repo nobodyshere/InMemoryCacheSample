@@ -2,7 +2,6 @@ using System;
 using InMemoryCacheApi.Models;
 using InMemoryCacheApi.Services;
 using Microsoft.Extensions.Caching.Memory;
-using Moq;
 using Xunit;
 
 namespace InMemoryCacheTests

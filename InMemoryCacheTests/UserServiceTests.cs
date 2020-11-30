@@ -1,4 +1,5 @@
-﻿using InMemoryCacheApi.Models;
+﻿using System.Threading.Tasks;
+using InMemoryCacheApi.Models;
 using InMemoryCacheApi.Services;
 using Xunit;
 
@@ -23,59 +24,64 @@ namespace InMemoryCacheTests
         };
 
         [Fact]
-        public void UserInsertSuccess()
+        public async Task UserInsertSuccess()
         {
             // Arrange
-            var userService = new UserService();
+            var context = new UsersDataFixture(nameof(UserInsertSuccess));
+            var userService = new UserService(context.MemoryContext);
 
             // Act
-            userService.InsertUser(_user1);
+            await userService.InsertUserAsync(_user1);
 
             // Assert
-            var existUser = userService.GetUserById(_user1.Id);
+            var existUser = await userService.GetUserByIdAsync(_user1.Id);
             Assert.NotNull(existUser);
         }
 
         [Fact]
-        public void UserInsertFailed()
+        public async Task UserInsertFailed()
         {
             // Arrange
-            var userService = new UserService();
+            var context = new UsersDataFixture(nameof(UserRemoveSuccess));
+            var userService = new UserService(context.MemoryContext);
 
             // Act
-            userService.InsertUser(_user1);
-            userService.InsertUser(_user2);
+            await userService.InsertUserAsync(_user1);
+            await userService.InsertUserAsync(_user2);
 
             // Arrange
-            var existUser = userService.GetUserById(6);
+            var existUser = await userService.GetUserByIdAsync(6);
             Assert.NotNull(existUser);
             Assert.NotEqual(existUser.Age, _user2.Age);
             Assert.NotEqual(existUser.FirstName, _user2.FirstName);
         }
 
         [Fact]
-        public void UserRemoveSuccess()
+        public async Task UserRemoveSuccess()
         {
             // Arrange
-            var userService = new UserService();
+            var context = new UsersDataFixture(nameof(UserRemoveSuccess));
+            var userService = new UserService(context.MemoryContext);
 
             // Act
-            userService.DeleteUser(6);
+            await userService.DeleteUserAsync(6);
 
             // Assert
-            Assert.Null(userService.GetUserById(6));
-            Assert.NotNull(userService.GetUserById(5));
+            Assert.Null(await userService.GetUserByIdAsync(6));
+            Assert.NotNull(userService.GetUserByIdAsync(5));
         }
 
         [Fact]
-        public void UserUpdateSuccess()
+        public async Task UserUpdateSuccess()
         {
-            var userService = new UserService();
-            userService.InsertUser(_user1);
+            // Arrange
+            var context = new UsersDataFixture(nameof(UserUpdateSuccess));
+            var userService = new UserService(context.MemoryContext);
+            await userService.InsertUserAsync(_user1);
 
             // Act
-            userService.UpdateUser(_user2);
-            var actualUser = userService.GetUserById(6);
+            await userService.UpdateUserAsync(_user2);
+            var actualUser = await userService.GetUserByIdAsync(6);
 
             // Assert
             Assert.Equal(_user2.Age, actualUser.Age);
@@ -84,13 +90,16 @@ namespace InMemoryCacheTests
         }
 
         [Fact]
-        public void GetAllUsersNotNull()
+        public async Task GetAllUsersNotNull()
         {
             // Arrange
-            var userService = new UserService();
+            var context = new UsersDataFixture(nameof(UserInsertSuccess));
+            var userService = new UserService(context.MemoryContext);
+
+            await userService.InsertUserAsync(_user1);
 
             // Act
-            var users = userService.GetUsers();
+            var users = await userService.GetUsersAsync();
 
             // Assert
             Assert.NotEmpty(users);
