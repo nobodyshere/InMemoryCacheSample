@@ -36,6 +36,8 @@ namespace InMemoryCacheTests
             // Assert
             var existUser = await userService.GetUserByIdAsync(_user1.Id);
             Assert.NotNull(existUser);
+
+            context.Dispose();
         }
 
         [Fact]
@@ -54,6 +56,8 @@ namespace InMemoryCacheTests
             Assert.NotNull(existUser);
             Assert.NotEqual(existUser.Age, _user2.Age);
             Assert.NotEqual(existUser.FirstName, _user2.FirstName);
+
+            context.Dispose();
         }
 
         [Fact]
@@ -69,6 +73,8 @@ namespace InMemoryCacheTests
             // Assert
             Assert.Null(await userService.GetUserByIdAsync(6));
             Assert.NotNull(userService.GetUserByIdAsync(5));
+
+            context.Dispose();
         }
 
         [Fact]
@@ -87,6 +93,8 @@ namespace InMemoryCacheTests
             Assert.Equal(_user2.Age, actualUser.Age);
             Assert.Equal(_user2.FirstName, actualUser.FirstName);
             Assert.Equal(_user2.SecondName, actualUser.SecondName);
+
+            context.Dispose();
         }
 
         [Fact]
@@ -103,6 +111,8 @@ namespace InMemoryCacheTests
 
             // Assert
             Assert.NotEmpty(users);
+
+            context.Dispose();
         }
     }
 }

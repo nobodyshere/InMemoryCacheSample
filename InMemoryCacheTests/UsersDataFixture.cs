@@ -20,7 +20,7 @@ namespace InMemoryCacheTests
 
         public void Dispose()
         {
-            MemoryContext.Database.EnsureDeleted();
+            MemoryContext?.Database.EnsureDeleted();
             MemoryContext?.Dispose();
         }
     }
